@@ -79,7 +79,7 @@ load-starter-plugin-list() {
 
   # If zsh-syntax-highlighting is bundled after zsh-history-substring-search,
   # they break, so get the order right.
-  zgenom load zsh-users/zsh-syntax-highlighting
+  zgenom load zdharma-continuum/fast-syntax-highlighting
   zgenom load zsh-users/zsh-history-substring-search
 
   # Set keystrokes for substring searching
@@ -119,7 +119,7 @@ load-starter-plugin-list() {
   zgenom load unixorn/bitbucket-git-helpers.plugin.zsh
 
   # A collection of scripts that might be useful to sysadmins.
-  zgenom load skx/sysadmin-util
+  # zgenom load skx/sysadmin-util
 
   # Adds aliases to open your current repo & branch on github.
   zgenom load peterhurford/git-it-on.zsh
@@ -132,15 +132,17 @@ load-starter-plugin-list() {
     # Load some oh-my-zsh plugins
     zgenom oh-my-zsh plugins/pip
     zgenom oh-my-zsh plugins/sudo
-    zgenom oh-my-zsh plugins/aws
-    zgenom oh-my-zsh plugins/chruby
+    # zgenom oh-my-zsh plugins/aws
+    # zgenom oh-my-zsh plugins/chruby
     zgenom oh-my-zsh plugins/colored-man-pages
     zgenom oh-my-zsh plugins/git
     zgenom oh-my-zsh plugins/github
     zgenom oh-my-zsh plugins/python
     zgenom oh-my-zsh plugins/rsync
     zgenom oh-my-zsh plugins/screen
-    zgenom oh-my-zsh plugins/vagrant
+    # zgenom oh-my-zsh plugins/vagrant
+    zgenom oh-my-zsh plugins/yarn
+    zgenom oh-my-zsh plugins/z
 
     if [ $(uname -a | grep -ci Darwin) = 1 ]; then
       # Load macOS-specific plugins
@@ -161,6 +163,10 @@ load-starter-plugin-list() {
   # Docker completion
   zgenom load srijanshetty/docker-zsh
 
+  zgenom load gretzky/n.zsh
+
+  zgenom load RitchieS/zsh-exa
+
   # Load me last
   GENCOMPL_FPATH=$HOME/.zsh/complete
 
@@ -171,6 +177,8 @@ load-starter-plugin-list() {
 
   # Add Fish-like autosuggestions to your ZSH.
   zgenom load zsh-users/zsh-autosuggestions
+
+  zgenom load Aloxaf/fzf-tab
 
   # k is a zsh script / plugin to make directory listings more readable,
   # adding a bit of color and some git status information on files and
