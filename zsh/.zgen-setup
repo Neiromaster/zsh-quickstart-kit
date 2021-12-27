@@ -183,6 +183,8 @@ load-starter-plugin-list() {
   # Add Fish-like autosuggestions to your ZSH.
   zgenom load zsh-users/zsh-autosuggestions
 
+  zgenom load Aloxaf/fzf-tab
+
   # k is a zsh script / plugin to make directory listings more readable,
   # adding a bit of color and some git status information on files and
   # directories.
