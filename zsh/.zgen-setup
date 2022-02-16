@@ -163,7 +163,7 @@ load-starter-plugin-list() {
   # Docker completion
   zgenom load srijanshetty/docker-zsh
 
-  zgenom load gretzky/n.zsh
+  # zgenom load gretzky/n.zsh
 
   zgenom load RitchieS/zsh-exa
 
