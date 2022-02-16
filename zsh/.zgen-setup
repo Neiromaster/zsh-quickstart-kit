@@ -166,7 +166,7 @@ load-starter-plugin-list() {
   # Load tab completions for 1Password's op command line tool if it's installed
   zgenom load unixorn/1password-op.plugin.zsh
 
-  zgenom load gretzky/n.zsh
+  # zgenom load gretzky/n.zsh
 
   zgenom load RitchieS/zsh-exa
 
