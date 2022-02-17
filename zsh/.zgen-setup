@@ -77,6 +77,8 @@ load-starter-plugin-list() {
   # copy as a starting point. This keeps you from having to maintain a fork of
   # the quickstart kit.
 
+  zgenom load Aloxaf/fzf-tab
+
   # If zsh-syntax-highlighting is bundled after zsh-history-substring-search,
   # they break, so get the order right.
   zgenom load zdharma-continuum/fast-syntax-highlighting
@@ -180,8 +182,6 @@ load-starter-plugin-list() {
 
   # Add Fish-like autosuggestions to your ZSH.
   zgenom load zsh-users/zsh-autosuggestions
-
-  zgenom load Aloxaf/fzf-tab
 
   # k is a zsh script / plugin to make directory listings more readable,
   # adding a bit of color and some git status information on files and
