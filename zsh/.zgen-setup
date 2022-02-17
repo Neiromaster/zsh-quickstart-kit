@@ -142,7 +142,7 @@ load-starter-plugin-list() {
     zgenom oh-my-zsh plugins/screen
     # zgenom oh-my-zsh plugins/vagrant
     zgenom oh-my-zsh plugins/yarn
-    zgenom oh-my-zsh plugins/z
+    # zgenom oh-my-zsh plugins/z
 
     if [ $(uname -a | grep -ci Darwin) = 1 ]; then
       # Load macOS-specific plugins
