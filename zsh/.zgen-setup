@@ -169,6 +169,9 @@ load-starter-plugin-list() {
 
   zgenom load RitchieS/zsh-exa
 
+  # Load tab completions for 1Password's op command line tool if it's installed
+  zgenom load unixorn/1password-op.plugin.zsh
+
   # Load me last
   GENCOMPL_FPATH=$HOME/.zsh/complete
 
