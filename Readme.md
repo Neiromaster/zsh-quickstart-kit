@@ -77,7 +77,7 @@ Here are a few good Powerline-compatible fonts:
 * [Monoid](http://larsenwork.com/monoid/) - Monoid is customizable and optimized for coding with bitmap-like sharpness at 15px line-height even on low res displays.
 * [Mononoki](https://madmalik.github.io/mononoki/) - Mononoki is a typeface by Matthias Tellen, created to enhance code formatting.
 * [More Nerd Fonts](https://www.nerdfonts.com/font-downloads) - Another site to download nerd fonts.
-* [Nerd fonts](https://github.com/ryanoasis/nerd-fonts) - A collection of over 20 patched fonts (over 1,700 variations) & the fontforge font patcher python script for Powerline, devicons, and vim-devicons: includes Droid Sans, Meslo, AnonymousPro, ProFont, Inconsolta, and many more.
+* [Nerd fonts](https://github.com/ryanoasis/nerd-fonts) - A collection of over 20 patched fonts (over 1,700 variations) & the fontforge font patcher python script for Powerline, devicons, and vim-devicons: includes Droid Sans, Meslo, AnonymousPro, ProFont, Inconsolta, and many more. These can be installed with `brew` - do `brew tap homebrew/cask-fonts && brew install --cask fontname`
 * [Powerline patched font collection](https://github.com/powerline/fonts) - A collection of a dozen or so fonts patched to include Powerline glyphs.
 * [Victor Mono](https://rubjo.github.io/victor-mono/) - Victor Mono is a free programming font with semi-connected cursive italics, symbol ligatures (!=, ->>, =>, ===, <=, >=, ++) and Latin, Cyrillic and Greek characters.
 * [spacemono](https://github.com/googlefonts/spacemono) - Google's new original monospace display typeface family.
@@ -158,24 +158,24 @@ The zsh-quickstart-kit configures your ZSH environment so that it includes:
 * [chrissicool/zsh-256color](https://github.com/chrissicool/zsh-256color) - Sets your terminal to 256 colors if available.
 * [djui/alias-tips](https://github.com/djui/alias-tips) - Warns you when you have an alias for the command you just typed and tells you what it is.
 * [peterhurford/git-it-on.zsh](https://github.com/peterhurford/git-it-on.zsh) - Opens your current repository on GitHub, in your current branch.
-* [RobSis/zsh-completion-generator](https://github.com/RobSis/zsh-completion-generator) - Adds a tool to generate ZSH completion functions for programs missing them by parsing their `--help` output. Note that this doesn't happen dynamically; you'll have to explicitly run it to create a completion for each command missing one.
+* [robSis/zsh-completion-generator](https://github.com/RobSis/zsh-completion-generator) - Adds a tool to generate ZSH completion functions for programs missing them by parsing their `--help` output. Note that this doesn't happen dynamically; you'll have to explicitly run it to create a completion for each command missing one.
 * [sharat87/pip-app](https://github.com/sharat87/pip-app) - A set of shell functions to make it easy to install small apps and utilities distributed with `pip`.
 * [skx/sysadmin-util](https://github.com/skx/sysadmin-util) - A collection of scripts useful for sysadmins.
 * [srijanshetty/docker-zsh](https://github.com/srijanshetty/docker-zsh) - Adds completions for `docker`.
 * [stackexchange/blackbox](https://github.com/stackexchange/blackbox) - Tom Limoncelli's tool for storing secret information in a repository with GnuPG encryption, automatically decrypting as needed.
 * [supercrabtree/k](https://github.com/supercrabtree/k) - `k` is a directory lister that also shows git status on files & directories.
+* [unixorn/1password-op.plugin.zsh](https://github.com/unixorn/1password-op.plugin.zsh) - Tab completions for [1Password](https://1password.com)'s [op](https://developer.1password.com/docs/cli/get-started/) command line tool. Only installs itself if `op` is in your `$PATH`.
 * [unixorn/autoupdate-zgenom](https://github.com/unixorn/autoupdate-zgenom) - Adds autoupdate (for both `zgenom` itself, and your plugins) to `zgenom`.
 * [unixorn/bitbucket-git-helpers](https://github.com/unixorn/bitbucket-git-helpers.plugin.zsh) - Adds `git` helper scripts for bitbucket.
 * [unixorn/fzf-zsh-plugin](https://github.com/unixorn/fzf-zsh-plugin) - This enables `fzf`-powered history search.
 * [unixorn/git-extra-commands](https://github.com/unixorn/git-extra-commands) - A collection of extra helper scripts for `git`.
 * [unixorn/jpb.zshplugin](https://github.com/unixorn/jpb.zshplugin) - Some of my standard aliases & functions.
-* [unixorn/1password-op.plugin.zsh](https://github.com/unixorn/1password-op.plugin.zsh) - Tab completions for [1Password](https://1password.com)'s [op](https://developer.1password.com/docs/cli/get-started/) command line tool. Only installs itself if `op` is in your `$PATH`.
 * [unixorn/rake-completion.zshplugin](https://github.com/unixorn/rake-completion.zshplugin) - Reads the Rakefile in the current directory so you can tab-complete the Rakefile targets.
 * [unixorn/tumult.plugin.zsh](https://github.com/unixorn/tumult.plugin.zsh) - Adds macOS-specific functions and scripts. This plugin only adds itself to your `$PATH` if you're running macOS to allow you to use the same plugin list on macOS and other systems.
+* [zdharma-continuum/fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting) - Syntax highlighting as you type.
 * [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) - Adds fish-like autosuggestions to your ZSH sessions.
 * [zsh-users/zsh-completions](https://github.com/zsh-users/zsh-completions) - Tab completions for many more applications than come standard with ZSH.
 * [zsh-users/zsh-history-substring-search](https://github.com/zsh-users/zsh-history-substring-search) - Better history search.
-* [zsh-users/zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) - Syntax highlighting as you type.
 
 The quickstart kit also uses `zgenom` to load oh-my-zsh and these plugins:
 
@@ -262,6 +262,7 @@ The quickstart kit does an opinionated (i.e., my way) setup of ZSH options and a
 
 However, `~/.zshrc.d` is processed *after* the quickstart sets its aliases, functions, and ZSH options, so if you don't care for something as set up in the quickstart, you can override the offending item in a shell fragment file there.
 
+The kit also looks for files in `~/.zshrc.pre-plugins.d`, and you can use snippet files in there to set environment variables that alter the startup behavior of plugins.
 
 ### Self-update Settings
 
@@ -270,6 +271,14 @@ The quickstart kit will automatically check for updates every seven days. If you
 ### Customizing the plugin list
 
 I've included what I think is a good starter set of ZSH plugins in this repository. However, everyone has their preferences for their environment.
+
+There are two main ways to customize the list.
+
+You can either add a new plugin in a file in `~/.zshrc.pre-plugins.d`, or you can make a `~/.zsh-quickstart-local-plugin` file.
+
+If you're just adding plugins to the standard list and want to automatically get any new changes I make to that standard list (new plugins, new locations when existing plugins are moved, etc) then adding a file like `/zshrc.pre-plugins.d/999-add-some-plugins` with entries like `zgenom load githubuser/pluginrepo && zgenom save` is the way to go - the kit will load its plugins, then add yours on the end.
+
+If you don't care about changes to the kit's plugins, then go with creating a `~/.zsh-quickstart-local-plugin` file.
 
 To make the list easier to customize without having to maintain a separate fork of the quickstart kit, if you create a file named `~/.zsh-quickstart-local-plugins`, the `.zshrc` from this starter kit will source that **instead** of running the `load-starter-plugin-list` function defined in `~/.zgen-setup`.
 
@@ -281,7 +290,7 @@ Copy that to your `$HOME/.zsh-quickstart-local-plugins`, change the list, and th
 
 ### Disabling zmv
 
-The quickstart automatically autoloads zmv. If you want to disable that, create a file named `.zsh-quickstart-no-zmv` in your home directory.
+The quickstart automatically autoloads `zmv`. If you want to disable that, create a file named `.zsh-quickstart-no-zmv` in your home directory.
 
 ### Disabling oh-my-zsh
 
