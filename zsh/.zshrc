@@ -193,6 +193,30 @@ function zsh-quickstart-enable-omz-plugins() {
   _zqs-trigger-init-rebuild
 }
 
+function zsh-quickstart-set-ssh-askpass-require() {
+  if [[ $(_zqs-get-setting ssh-askpass-require) == 'true' ]]; then
+    export SSH_ASKPASS_REQUIRE=never
+  fi
+}
+
+function zsh-quickstart-enable-ssh-askpass-require() {
+  _zqs-set-setting enable-ssh-askpass-require true
+}
+
+function zsh-quickstart-disable-ssh-askpass-require() {
+  _zqs-set-setting enable-ssh-askpass-require false
+  zsh-quickstart-check-for-ssh-askpass
+}
+
+function zsh-quickstart-check-for-ssh-askpass() {
+  if ! can_haz ssh-askpass; then
+    echo "If you disable the ssh-askpass-require feature."
+    echo "You'll need to install ssh-askpass for the quickstart to prompt,"
+    echo "for your ssh key/s passphrase on shell startup."
+    echo "This is the default behavior for ssh-add:"
+    echo $(tput setaf 2)"https://www.man7.org/linux/man-pages/man1/ssh-add.1.html#ENVIRONMENT"$(tput sgr0)
+  fi
+}
 # Correct spelling for commands
 setopt correct
 
@@ -315,6 +339,9 @@ load-our-ssh-keys() {
 
 if [[ -z "$SSH_CLIENT" ]] || can_haz keychain; then
   # We're not on a remote machine, so load keys
+  if [[ "$(_zqs-get-setting ssh-askpass-require)" == 'true' ]]; then
+    zsh-quickstart-set-ssh-askpass-require
+  fi
   load-our-ssh-keys
 fi
 
@@ -708,6 +735,8 @@ function zqs-help() {
   echo "zqs enable-bindkey-handling - Set the quickstart to confingure your bindkey settings. Default behavior."
   echo "zqs disable-omz-plugins - Set the quickstart to not load oh-my-zsh plugins if you're using the standard plugin list"
   echo "zqs enable-omz-plugins - Set the quickstart to load oh-my-zsh plugins if you're using the standard plugin list"
+  echo "zqs enable-ssh-askpass-require - Set the quickstart to prompt for your ssh passphrase on the command line."
+  echo "zqs disable-ssh-askpass-require - Set the quickstart to prompt for your ssh passphrase via a gui program. Default behavior"
   echo "zqs disable-ssh-key-listing - Set the quickstart to not display all the loaded ssh keys"
   echo "zqs enable-ssh-key-listing - Set the quickstart to display all the loaded ssh keys. Default behavior."
   echo "zqs disable-zmv-autoloading - Set the quickstart to not run 'autoload -U zmv'. Useful if you're using another plugin to handle it."
@@ -739,6 +768,12 @@ function zqs() {
       ;;
     'enable-omz-plugins')
       zsh-quickstart-enable-omz-plugins
+      ;;
+    'enable-ssh-askpass-require')
+      zsh-quickstart-enable-ssh-askpass-require
+      ;;
+    'disable-ssh-askpass-require')
+      zsh-quickstart-disable-ssh-askpass-require
       ;;
     'enable-ssh-key-listing')
       _zqs-set-setting list-ssh-keys true
