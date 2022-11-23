@@ -59,8 +59,8 @@ export _ZQS_SETTINGS_DIR
 # them is likely to break things badly.
 
 _zqs-trigger-init-rebuild() {
-  rm -f ~/.zgen/init.zsh
-  rm -f ~/.zgenom/init.zsh
+#   rm -f ~/.zgen/init.zsh
+#   rm -f ~/.zgenom/init.zsh
 }
 
 # We need to load shell fragment files often enough to make it a function
@@ -129,11 +129,6 @@ _zqs-purge-setting() {
 
 # Convert the old settings files into new style settings
 function _zqs-update-stale-settings-files() {
-  if [[ -f ~/.zsh-quickstart-use-bullet-train ]]; then
-    _zqs-set-setting bullet-train true
-    rm -f ~/.zsh-quickstart-use-bullet-train
-    echo "Converted old ~/.zsh-quickstart-use-bullet-train to new settings system"
-  fi
   if [[ -f ~/.zsh-quickstart-no-omz ]]; then
     _zqs-set-setting load-omz-plugins false
     rm -f ~/.zsh-quickstart-no-omz
@@ -149,16 +144,8 @@ function _zqs-update-stale-settings-files() {
 _zqs-update-stale-settings-files
 
 # Add some quickstart feature toggle functions
-function zsh-quickstart-select-bullet-train() {
-  _zqs-set-setting bullet-train true
-  _zqs-set-setting powerlevel10k false
-  _zqs-trigger-init-rebuild
-}
-
 function zsh-quickstart-select-powerlevel10k() {
-  rm -f ~/.zsh-quickstart-use-bullet-train
   _zqs-set-setting powerlevel10k true
-  _zqs-set-setting bullet-train false
   _zqs-trigger-init-rebuild
 }
 
@@ -373,8 +360,8 @@ fi
 
 # Now that we have $PATH set up and ssh keys loaded, configure zgenom.
 # Start zgenom
-if [ -f ~/.zgen-setup ]; then
-  source ~/.zgen-setup
+if [ -f ~/.zi-setup ]; then
+  source ~/.zi-setup
 fi
 
 # Undo the hackery for issue 180
