@@ -1,4 +1,4 @@
-# Copyright 2006-2022 Joseph Block <jpb@unixorn.net>
+# Copyright 2006-2023 Joseph Block <jpb@unixorn.net>
 #
 # BSD licensed, see LICENSE.txt
 #
@@ -129,6 +129,13 @@ _zqs-purge-setting() {
 
 # Convert the old settings files into new style settings
 function _zqs-update-stale-settings-files() {
+  # Convert .zqs-additional-plugins to new format
+  if [[ -f ~/.zqs-additional-plugins ]]; then
+    mkdir -p ~/.zshrc.add-plugins.d
+    sed -e 's/^./zgenom load &/' ~/.zqs-additional-plugins >> ~/.zshrc.add-plugins.d/0000-transferred-plugins
+    rm -f ~/.zqs-additional-plugins
+    echo "Plugins from .zqs-additional-plugins were moved to .zshrc.add-plugins.d/0000-transferred-plugins with a format change"
+  fi
   if [[ -f ~/.zsh-quickstart-use-bullet-train ]]; then
     _zqs-set-setting bullet-train true
     rm -f ~/.zsh-quickstart-use-bullet-train
@@ -143,6 +150,12 @@ function _zqs-update-stale-settings-files() {
     _zqs-set-setting no-zmv true
     rm -f ~/.zsh-quickstart-no-zmv
     echo "Converted old ~/.zsh-quickstart-no-zmv to new settings system"
+  fi
+  # Don't break existing user setups, but transition to a zqs setting to reduce
+  # pollution in the user's environment.
+  if [[ -z "ZSH_QUICKSTART_SKIP_TRAPINT" ]]; then
+    echo "'ZSH_QUICKSTART_SKIP_TRAPINT' is deprecated in favor of running 'zqs disable-control-c-decorator' to write a settings knob."
+    zqs-quickstart-disable-control-c-decorator
   fi
 }
 
@@ -171,6 +184,18 @@ function zsh-quickstart-disable-bindkey-handling() {
 
 function zsh-quickstart-enable-bindkey-handling() {
   _zqs-set-setting handle-bindkeys true
+}
+
+function zqs-quickstart-disable-control-c-decorator() {
+  _zqs-set-setting control-c-decorator false
+  echo "Disabled the control-c decorator in future zsh sessions."
+  echo "You can re-enable the quickstart's control-c decorator by running 'zqs enable-control-c-decorator'"
+}
+
+function zqs-quickstart-enable-control-c-decorator() {
+  echo "The control-c decorator is enabled for future zsh sessions."
+  echo "You can disable the quickstart's control-c decorator by running 'zqs disable-control-c-decorator'"
+  _zqs-set-setting control-c-decorator true
 }
 
 function _zqs-enable-zmv-autoloading() {
@@ -282,23 +307,26 @@ if [[ -z "$LS_COLORS" ]]; then
 fi
 
 load-our-ssh-keys() {
-  # If keychain is installed let it take care of ssh-agent, else do it manually
+  if can_haz op; then export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+  else
+    # If keychain is installed let it take care of ssh-agent, else do it manually
   if can_haz keychain; then
     eval `keychain -q --eval`
   else
     if [ -z "$SSH_AUTH_SOCK" ]; then
-      # If user has keychain installed, let it take care of ssh-agent, else do it manually
+       # If user has keychain installed, let it take care of ssh-agent, else do it manually
       # Check for a currently running instance of the agent
-      RUNNING_AGENT="$(ps -ax | grep 'ssh-agent -s' | grep -v grep | wc -l | tr -d '[:space:]')"
-      if [ "$RUNNING_AGENT" = "0" ]; then
-        if [ ! -d ~/.ssh ] ; then
+       RUNNING_AGENT="$(ps -ax | grep 'ssh-agent -s' | grep -v grep | wc -l | tr -d '[:space:]')"
+       if [ "$RUNNING_AGENT" = "0" ]; then
+          if [ ! -d ~/.ssh ] ; then
           mkdir -p ~/.ssh
         fi
         # Launch a new instance of the agent
-        ssh-agent -s &> ~/.ssh/ssh-agent
+          ssh-agent -s &> ~/.ssh/ssh-agent
+       fi
+       eval $(cat ~/.ssh/ssh-agent)
       fi
-      eval $(cat ~/.ssh/ssh-agent)
-    fi
+  fi
   fi
 
   local key_manager=ssh-add
@@ -411,7 +439,9 @@ setopt share_history
 HISTSIZE=100000
 SAVEHIST=100000
 HISTFILE=~/.zsh_history
-export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"
+
+#ZSH Man page referencing the history_ignore parameter - https://manpages.ubuntu.com/manpages/kinetic/en/man1/zshparam.1.html
+HISTORY_IGNORE="(cd ..|l[s]#( *)#|pwd *|exit *|date *|* --help)"
 
 # Set some options about directories
 setopt pushd_ignore_dups
@@ -515,31 +545,6 @@ if [ "$TERM" = "screen" -a ! "$SHOWED_SCREEN_MESSAGE" = "true" ]; then
     echo "$detached_screens"
     echo "+---------------------------------------+"
   fi
-fi
-
-# grc colorizes the output of a lot of commands. If the user installed it,
-# use it.
-
-# Try and find the grc setup file
-if (( $+commands[grc] )); then
-  GRC_SETUP='/usr/local/etc/grc.bashrc'
-fi
-if (( $+commands[grc] )) && (( $+commands[brew] ))
-then
-  GRC_SETUP="$(brew --prefix)/etc/grc.bashrc"
-fi
-if [[ -r "$GRC_SETUP" ]]; then
-  source "$GRC_SETUP"
-fi
-unset GRC_SETUP
-
-if (( $+commands[grc] ))
-then
-  function ping5(){
-    grc --color=auto ping -c 5 "$@"
-  }
-else
-  alias ping5='ping -c 5'
 fi
 
 # These need to be done after $PATH is set up so we can find
@@ -702,7 +707,7 @@ if [[ $(_zqs-get-setting list-ssh-keys true) == 'true' ]]; then
   echo
 fi
 
-if [[ -z "ZSH_QUICKSTART_SKIP_TRAPINT" ]]; then
+if [[ $(_zqs-get-setting control-c-decorator 'true') == 'true' ]]; then
   # Original source: https://vinipsmaker.wordpress.com/2014/02/23/my-zsh-config/
   # bash prints ^C when you're typing a command and control-c to cancel, so it
   # is easy to see it wasn't executed. By default, ZSH doesn't print the ^C.
@@ -729,10 +734,13 @@ function zqs-help() {
   echo "zqs selfupdate - Force an immediate update of the quickstart kit"
   echo "zqs update - Update the quickstart kit and all your plugins"
   echo "zqs update-plugins - Update your plugins"
+  echo "zqs cleanup - Cleanup unused plugins after removing them from the list"
   echo ""
   echo "Quickstart settings commands:"
   echo "zqs disable-bindkey-handling - Set the quickstart to not touch any bindkey settings. Useful if you're using another plugin to handle it."
-  echo "zqs enable-bindkey-handling - Set the quickstart to confingure your bindkey settings. Default behavior."
+  echo "zqs enable-bindkey-handling - Set the quickstart to configure your bindkey settings. Default behavior."
+  echo "zqs enable-control-c-decorator - Creates a TRAPINT function to display '^C' when you type control-c instead of being silent. Default behavior."
+  echo "zqs disable-control-c-decorator - No longer creates a TRAPINT function to display '^C' when you type control-c."
   echo "zqs disable-omz-plugins - Set the quickstart to not load oh-my-zsh plugins if you're using the standard plugin list"
   echo "zqs enable-omz-plugins - Set the quickstart to load oh-my-zsh plugins if you're using the standard plugin list"
   echo "zqs enable-ssh-askpass-require - Set the quickstart to prompt for your ssh passphrase on the command line."
@@ -757,6 +765,13 @@ function zqs() {
     'enable-bindkey-handling')
       zsh-quickstart-enable-bindkey-handling
       ;;
+    'disable-control-c-decorator')
+      zqs-quickstart-disable-control-c-decorator
+      ;;
+    'enable-control-c-decorator')
+      zqs-quickstart-enable-control-c-decorator
+      ;;
+
     'disable-zmv-autoloading')
       _zqs-disable-zmv-autoloading
       ;;
@@ -790,6 +805,9 @@ function zqs() {
       ;;
     'update-plugins')
       zgenom update
+      ;;
+    'cleanup')
+      zgenom clean
       ;;
     'delete-setting')
       shift
